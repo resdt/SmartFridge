@@ -126,39 +126,20 @@ if qr_code:
     decoded_data = decode_qr_code(image)
     if not decoded_data:
         st.error("Ошибка чтения QR-кода")
-        st.stop()
+    else:
+        data_string = decoded_data[0].strip()
+        data_list = data_string.split("\n")
+        data_dict = {element.split(": ")[0]: element.split(": ")[1] for element in data_list}
+        data_df = pd.DataFrame.from_dict(data_dict, orient="index", columns=[""])
+        st.dataframe(data_df)
 
-    mode = st.pills(label="Что Вы хотите сделать?", options=["Просмотреть", "Добавить в холодильник", "Удалить из холодильника"], default="Просмотреть")
-    if mode == "Просмотреть":
-        for data in decoded_data:
-            for line in data.split("\n"):
-                st.write(line)
-    elif mode == "Добавить в холодильник":
-        for data in decoded_data:
-            for line in data.split("\n"):
-                line_data = line.split(": ")
-                if line_data[0] == "ID":
-                    item_id = int(line_data[1])
-                    break
-        try:
+        item_id = int(data_dict["ID"])
+        if st.button("Добавить в холодильник"):
             add_to_fridge(item_id)
             st.success("Продукт успешно добавлен")
-        except Exception as e:
-            st.error(e)
-            st.stop()
-    else:
-        for data in decoded_data:
-            for line in data.split("\n"):
-                line_data = line.split(": ")
-                if line_data[0] == "ID":
-                    item_id = int(line_data[1])
-                    break
-        try:
+        if st.button("Удалить из холодильника"):
             delete_from_fridge(item_id)
             st.success("Продукт успешно удален")
-        except Exception as e:
-            st.error(e)
-            st.stop()
 
 st.header("Генерация QR-кодов")
 df_products = df_dict["df_products"]
