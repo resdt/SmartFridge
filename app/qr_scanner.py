@@ -129,7 +129,7 @@ if qr_code:
     else:
         data_string = decoded_data[0].strip()
         data_list = data_string.split("\n")
-        data_dict = {element.split(": ")[0]: element.split(": ")[1] for element in data_list}
+        data_dict = {element.split(": ")[0]: element.split(": ")[1] for element in data_list if ": " in element}
         data_df = pd.DataFrame.from_dict(data_dict, orient="index", columns=[""])
         st.dataframe(data_df)
 
