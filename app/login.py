@@ -6,7 +6,7 @@ import utils.connections as conn
 
 st.title("Авторизация")
 with st.form("login_form"):
-    username = st.text_input("Имя пользователя")
+    username = st.text_input("Имя пользователя").lower()
     password = st.text_input("Пароль", type="password")
     submit_button = st.form_submit_button("Войти")
     if submit_button:
