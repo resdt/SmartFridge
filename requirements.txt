@@ -16,6 +16,7 @@ MarkupSafe==3.0.2
 mdurl==0.1.2
 narwhals==1.21.1
 numpy==2.2.1
+opencv-python==4.10.0.84
 packaging==24.2
 pandas==2.2.3
 pillow==11.1.0
@@ -27,7 +28,6 @@ pydeck==0.9.1
 Pygments==2.19.1
 python-dateutil==2.9.0.post0
 pytz==2024.2
-pyzbar==0.1.9
 qrcode==8.0
 referencing==0.35.1
 requests==2.32.3

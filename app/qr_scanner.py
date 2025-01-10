@@ -1,9 +1,11 @@
-import pandas as pd
-import streamlit as st
-import qrcode
-from pyzbar.pyzbar import decode
-from PIL import Image
 import io
+
+import cv2
+import numpy as np
+import pandas as pd
+import qrcode
+import streamlit as st
+from PIL import Image
 
 import utils.connections as conn
 
@@ -27,9 +29,16 @@ LEFT JOIN product_types AS pt ON product_type_id = pt.id;
 
 
 def decode_qr_code(image):
-    decoded_objects = decode(image)
-    decoded_data = [obj.data.decode("utf-8") for obj in decoded_objects]
-    return decoded_data
+    if isinstance(image, Image.Image):
+        image = np.array(image)
+
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    detector = cv2.QRCodeDetector()
+    success, data, *_ = detector.detectAndDecodeMulti(gray)
+    if success:
+        return [data] if isinstance(data, str) else list(data)
+    else:
+        return []
 
 
 def add_to_fridge(item_id):
