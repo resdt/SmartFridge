@@ -56,6 +56,14 @@ def display_search_field(src_df):
             st.write(f"Продукт/тип товара {search_name} не найдены.")
 
 
+@st.dialog("Внимание")
+def notify_user(bad_quantity, almost_bad_quantity):
+    if bad_quantity:
+        st.write(f"У Вас {bad_quantity} просроченных продуктов")
+    if almost_bad_quantity:
+        st.write(f"У Вас {almost_bad_quantity} продуктов с истекающим сроком годности")
+
+
 st.title("Главная страница")
 df_dict = load_data()
 
@@ -76,6 +84,9 @@ with col2:
 with col3:
     bad_quantity = df_fridge[df_fridge["product_state"] == "Просрочено"].shape[0]
     st.metric("Просроченных:", f"{bad_quantity: d}")
+
+if almost_bad_quantity or bad_quantity:
+    notify_user(bad_quantity, almost_bad_quantity)
 
 df_display = df_fridge.copy()
 df_display.index += 1

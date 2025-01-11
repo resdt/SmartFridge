@@ -16,7 +16,7 @@ SELECT username,
        hashed_password,
        user_type
   FROM users
- WHERE username = %s;
+ WHERE username = $1;
     """
             user_data = conn.execute_query(cur_user_query, username)
             if not user_data:

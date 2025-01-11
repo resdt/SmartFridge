@@ -24,7 +24,7 @@ LEFT JOIN product_types AS pt ON product_type_id = pt.id;
 
 @st.fragment
 def display_product_list():
-    global df_display
+    df_display = st.session_state.df_display
 
     col1, col2 = st.columns(2)
     with col1:
@@ -36,11 +36,12 @@ def display_product_list():
         if product_name is not None:
             new_row = pd.DataFrame({"Название товара": [product_name], "Количество товара": [quantity]})
             df_display = pd.concat([df_display, new_row], ignore_index=True)
+            df_display.reset_index(drop=True, inplace=True)
+            df_display.index += 1
+            st.session_state.df_display = df_display
         else:
             st.error("Выберите название товара")
     if not df_display.empty:
-        df_display.reset_index(drop=True, inplace=True)
-        df_display.index += 1
         st.dataframe(df_display, use_container_width=True)
         if st.button("Очистить"):
             df_display = pd.DataFrame()
@@ -51,5 +52,5 @@ st.title("Список покупок")
 df_dict = load_data()
 
 df_products = df_dict["df_products"]
-df_display = pd.DataFrame(columns=["Название товара", "Количество товара"])
+st.session_state.df_display = pd.DataFrame(columns=["Название товара", "Количество товара"])
 display_product_list()

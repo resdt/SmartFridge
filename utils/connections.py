@@ -1,6 +1,6 @@
 import re
-import psycopg2
-from psycopg2.extras import DictCursor
+import asyncpg
+import asyncio
 
 
 DB_LINK = "postgresql://smartfridgedb_owner:kRe0Hf1josyS@ep-young-dust-a5pvzx3t.us-east-2.aws.neon.tech/smartfridgedb?sslmode=require"
@@ -12,21 +12,18 @@ DB_PARAMS = {"user": PARAMETER_LIST[1],
              "port": "5432"}
 
 
-def execute_query(query, *parameters):
+async def async_execute_query(query, *parameters):
+    connection = await asyncpg.connect(**DB_PARAMS)
     try:
-        connection = psycopg2.connect(**DB_PARAMS)
-        cursor = connection.cursor(cursor_factory=DictCursor)
-        cursor.execute(query, parameters)
-
-        if query.strip().lower().startswith("select"):
-            results = cursor.fetchall()
-            return [dict(row) for row in results]
-        else:
-            connection.commit()
-            return None
+        results = await connection.fetch(query, *parameters)
+        return [dict(row) for row in results]
     except Exception as e:
         print(e)
         return None
     finally:
-        if "connection" in locals() and connection:
-            connection.close()
+        await connection.close()
+
+
+def execute_query(query, *parameters):
+    result = asyncio.run(async_execute_query(query, *parameters))
+    return result

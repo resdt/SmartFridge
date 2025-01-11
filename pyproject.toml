@@ -12,8 +12,8 @@ streamlit = "1.41.0"
 pandas = "^2.2.3"
 qrcode = "^8.0"
 plotly = "^5.24.1"
-psycopg2-binary = "^2.9.10"
 opencv-python-headless = "^4.10.0.84"
+asyncpg = "^0.30.0"
 
 
 [tool.poetry.group.dev.dependencies]
