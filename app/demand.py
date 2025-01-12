@@ -83,8 +83,12 @@ def display_filter_block(src_df):
     st.dataframe(df, use_container_width=True)
 
 
-st.title("Анализ потребляемых товаров")
-df_dict = load_data()
+def display():
+    st.title("Анализ потребляемых товаров")
+    df_dict = load_data()
 
-df_fridge_log = df_dict["df_fridge_log"]
-display_filter_block(df_fridge_log)
+    df_fridge_log = df_dict["df_fridge_log"]
+    display_filter_block(df_fridge_log)
+
+
+display()

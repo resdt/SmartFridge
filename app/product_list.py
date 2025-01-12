@@ -24,6 +24,7 @@ LEFT JOIN product_types AS pt ON product_type_id = pt.id;
 
 @st.fragment
 def display_product_list():
+    df_products = st.session_state.df_products
     df_display = st.session_state.df_display
 
     col1, col2 = st.columns(2)
@@ -48,9 +49,14 @@ def display_product_list():
             st.rerun()
 
 
-st.title("Список покупок")
-df_dict = load_data()
+def display():
+    st.title("Список покупок")
+    df_dict = load_data()
 
-df_products = df_dict["df_products"]
-st.session_state.df_display = pd.DataFrame(columns=["Название товара", "Количество товара"])
-display_product_list()
+    df_products = df_dict["df_products"]
+    st.session_state.df_products = df_products
+    st.session_state.df_display = pd.DataFrame(columns=["Название товара", "Количество товара"])
+    display_product_list()
+
+
+display()

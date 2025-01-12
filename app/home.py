@@ -5,7 +5,6 @@ from datetime import datetime, timedelta
 import utils.connections as conn
 
 
-# @st.cache_data(ttl=10 * 60 * 60, show_spinner=False)
 def load_data():
     result = {}
     fridge_query = """
@@ -64,31 +63,35 @@ def notify_user(bad_quantity, almost_bad_quantity):
         st.write(f"У Вас {almost_bad_quantity} продуктов с истекающим сроком годности")
 
 
-st.title("Главная страница")
-df_dict = load_data()
+def display():
+    st.title("Главная страница")
+    df_dict = load_data()
 
-st.header("Состояние холодильника")
-df_fridge = df_dict["df_fridge"]
+    st.header("Состояние холодильника")
+    df_fridge = df_dict["df_fridge"]
 
-display_search_field(df_fridge)
+    display_search_field(df_fridge)
 
-all_quantity = df_fridge.shape[0]
-st.metric("Всего товаров:", f"{all_quantity: d}")
-col1, col2, col3 = st.columns(3)
-with col1:
-    ok_quantity = df_fridge[df_fridge["product_state"] == "ОК"].shape[0]
-    st.metric("Качественных:", f"{ok_quantity: d}")
-with col2:
-    almost_bad_quantity = df_fridge[df_fridge["product_state"] == "Истекает срок годности"].shape[0]
-    st.metric("Истекает срок годности:", f"{almost_bad_quantity: d}")
-with col3:
-    bad_quantity = df_fridge[df_fridge["product_state"] == "Просрочено"].shape[0]
-    st.metric("Просроченных:", f"{bad_quantity: d}")
+    all_quantity = df_fridge.shape[0]
+    st.metric("Всего товаров:", f"{all_quantity: d}")
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        ok_quantity = df_fridge[df_fridge["product_state"] == "ОК"].shape[0]
+        st.metric("Качественных:", f"{ok_quantity: d}")
+    with col2:
+        almost_bad_quantity = df_fridge[df_fridge["product_state"] == "Истекает срок годности"].shape[0]
+        st.metric("Истекает срок годности:", f"{almost_bad_quantity: d}")
+    with col3:
+        bad_quantity = df_fridge[df_fridge["product_state"] == "Просрочено"].shape[0]
+        st.metric("Просроченных:", f"{bad_quantity: d}")
 
-if almost_bad_quantity or bad_quantity:
-    notify_user(bad_quantity, almost_bad_quantity)
+    if almost_bad_quantity or bad_quantity:
+        notify_user(bad_quantity, almost_bad_quantity)
 
-df_display = df_fridge.copy()
-df_display.index += 1
-df_display = df_display.style.apply(color_rows, axis=1)
-st.dataframe(df_display, use_container_width=True)
+    df_display = df_fridge.copy()
+    df_display.index += 1
+    df_display = df_display.style.apply(color_rows, axis=1)
+    st.dataframe(df_display, use_container_width=True)
+
+
+display()

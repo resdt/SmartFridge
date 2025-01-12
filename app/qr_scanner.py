@@ -117,31 +117,35 @@ ID: {item_data["id"]}
         st.image(buffer_)
 
 
-st.title("QR-сканер")
-df_dict = load_data()
+def display():
+    st.title("QR-сканер")
+    df_dict = load_data()
 
-qr_code = st.camera_input("Сфотографируйте QR-код")
-if qr_code:
-    image = Image.open(qr_code)
-    decoded_data = decode_qr_code(image)
-    try:
-        data_string = decoded_data[0].strip()
-        data_list = data_string.split("\n")
-        data_dict = {element.split(": ")[0]: element.split(": ")[1] for element in data_list}
-        data_df = pd.DataFrame.from_dict(data_dict, orient="index", columns=[""])
-        st.dataframe(data_df)
+    qr_code = st.camera_input("Сфотографируйте QR-код")
+    if qr_code:
+        image = Image.open(qr_code)
+        decoded_data = decode_qr_code(image)
+        try:
+            data_string = decoded_data[0].strip()
+            data_list = data_string.split("\n")
+            data_dict = {element.split(": ")[0]: element.split(": ")[1] for element in data_list}
+            data_df = pd.DataFrame.from_dict(data_dict, orient="index", columns=[""])
+            st.dataframe(data_df)
 
-        item_id = int(data_dict["ID"])
-        if st.button("Добавить в холодильник"):
-            add_to_fridge(item_id)
-            st.success("Продукт успешно добавлен")
-        if st.button("Удалить из холодильника"):
-            delete_from_fridge(item_id)
-            st.success("Продукт успешно удален")
-    except Exception as e:
-        print(e)
-        st.error("Ошибка чтения QR-кода")
+            item_id = int(data_dict["ID"])
+            if st.button("Добавить в холодильник"):
+                add_to_fridge(item_id)
+                st.success("Продукт успешно добавлен")
+            if st.button("Удалить из холодильника"):
+                delete_from_fridge(item_id)
+                st.success("Продукт успешно удален")
+        except Exception as e:
+            print(e)
+            st.error("Ошибка чтения QR-кода")
 
-st.header("Генерация QR-кодов")
-df_products = df_dict["df_products"]
-generate_qr_code(df_products)
+    st.header("Генерация QR-кодов")
+    df_products = df_dict["df_products"]
+    generate_qr_code(df_products)
+
+
+display()
