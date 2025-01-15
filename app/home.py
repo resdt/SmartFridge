@@ -8,15 +8,15 @@ import utils.connections as conn
 def load_data():
     result = {}
     fridge_query = """
-SELECT product_name,
-       product_type,
-       quantity,
-       measure,
-       manufacture_date,
-       release_date
-FROM fridge
-LEFT JOIN products AS p ON product_id = p.id
-LEFT JOIN product_types AS pt ON product_type_id = pt.id;
+    SELECT product_name,
+           product_type,
+           quantity,
+           measure,
+           manufacture_date,
+           release_date
+    FROM fridge
+    LEFT JOIN products AS p ON product_id = p.id
+    LEFT JOIN product_types AS pt ON product_type_id = pt.id;
     """
     df_fridge = pd.DataFrame(conn.execute_query(fridge_query))
     cur_date = datetime.now()

@@ -14,27 +14,19 @@ def display():
         if submit_button:
             try:
                 cur_user_query = """
-SELECT username,
-       hashed_password,
-       user_type
-FROM users
-WHERE username = $1;
-        """
-                user_data = conn.execute_query(cur_user_query, username)
+                SELECT user_type
+                FROM users
+                WHERE username = $1 AND hashed_password = $2;
+                """
+                hashed_password = hashlib.sha256(password.encode()).hexdigest()
+                user_data = conn.execute_query(cur_user_query, username, hashed_password)
+
                 if not user_data:
                     st.error("Неправильный логин или пароль")
                     st.stop()
 
-                user = user_data[0]
-                user_hashed_password = user["hashed_password"]
-                user_type = user["user_type"]
-
-                if user_hashed_password != hashlib.sha256(password.encode()).hexdigest():
-                    st.error("Неправильный логин или пароль")
-                    st.stop()
-
-                st.session_state.user_type = user_type
-                st.session_state.login = True
+                st.session_state.user_type = user_data[0]["user_type"]
+                st.session_state.is_logged_in = True
                 st.rerun()
             except Exception:
                 st.error("Неправильный логин или пароль")

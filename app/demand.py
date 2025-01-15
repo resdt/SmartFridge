@@ -10,11 +10,11 @@ import utils.connections as conn
 def load_data():
     result = {}
     fridge_log_query = """
-SELECT product_name,
-       action,
-       action_date
-FROM fridge_log
-LEFT JOIN products AS p ON product_id = p.id;
+    SELECT product_name,
+           action,
+           action_date
+    FROM fridge_log
+    LEFT JOIN products AS p ON product_id = p.id;
     """
     df_fridge_log = pd.DataFrame(conn.execute_query(fridge_log_query))
     result["df_fridge_log"] = df_fridge_log

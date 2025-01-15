@@ -14,13 +14,13 @@ import utils.connections as conn
 def load_data():
     result = {}
     product_query = """
-SELECT product_name,
-       product_type,
-       measure_type,
-       manufacture_date,
-       release_date
-FROM products
-LEFT JOIN product_types AS pt ON product_type_id = pt.id;
+    SELECT product_name,
+           product_type,
+           measure_type,
+           manufacture_date,
+           release_date
+    FROM products
+    LEFT JOIN product_types AS pt ON product_type_id = pt.id;
     """
     df_products = pd.DataFrame(conn.execute_query(product_query))
     result["df_products"] = df_products
@@ -43,27 +43,27 @@ def decode_qr_code(image):
 
 def add_to_fridge(item_id):
     addition_query = """
-INSERT INTO fridge (product_id) VALUES ($1);
+    INSERT INTO fridge (product_id) VALUES ($1);
     """
     conn.execute_query(addition_query, item_id)
 
     log_query = """
-INSERT INTO fridge_log (product_id, action, action_date)
-VALUES ($1, 'add', CURRENT_DATE);
+    INSERT INTO fridge_log (product_id, action, action_date)
+    VALUES ($1, 'add', CURRENT_DATE);
     """
     conn.execute_query(log_query, item_id)
 
 
 def delete_from_fridge(item_id):
     deletion_query = """
-DELETE FROM fridge
-WHERE product_id = $1;
+    DELETE FROM fridge
+    WHERE product_id = $1;
     """
     conn.execute_query(deletion_query, item_id)
 
     log_query = """
-INSERT INTO fridge_log (product_id, action, action_date)
-VALUES ($1, 'delete', CURRENT_DATE);
+    INSERT INTO fridge_log (product_id, action, action_date)
+    VALUES ($1, 'delete', CURRENT_DATE);
     """
     conn.execute_query(log_query, item_id)
 
@@ -72,18 +72,18 @@ VALUES ($1, 'delete', CURRENT_DATE);
 def generate_qr_code(df_products):
     item = st.selectbox("Выберите товар для создания QR-кода", options=df_products["product_name"].unique(), index=None)
     item_query = """
-SELECT p.id,
-       product_name,
-       product_type,
-       manufacture_date,
-       release_date,
-       quantity,
-       measure,
-       nutritional_value,
-       measure_type
-FROM products AS p
-LEFT JOIN product_types AS pt ON product_type_id = pt.id
-WHERE product_name = $1;
+    SELECT p.id,
+           product_name,
+           product_type,
+           manufacture_date,
+           release_date,
+           quantity,
+           measure,
+           nutritional_value,
+           measure_type
+    FROM products AS p
+    LEFT JOIN product_types AS pt ON product_type_id = pt.id
+    WHERE product_name = $1;
     """
     if st.button("Показать QR-код"):
         if not item:

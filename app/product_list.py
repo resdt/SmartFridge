@@ -8,13 +8,13 @@ import utils.connections as conn
 def load_data():
     result = {}
     product_query = """
-SELECT product_name,
-       product_type,
-       measure_type,
-       manufacture_date,
-       release_date
-FROM products
-LEFT JOIN product_types AS pt ON product_type_id = pt.id;
+    SELECT product_name,
+           product_type,
+           measure_type,
+           manufacture_date,
+           release_date
+    FROM products
+    LEFT JOIN product_types AS pt ON product_type_id = pt.id;
     """
     df_products = pd.DataFrame(conn.execute_query(product_query))
     result["df_products"] = df_products
