@@ -4,7 +4,7 @@ import streamlit as st
 import utils.connections as conn
 
 
-@st.cache_data(ttl=10 * 60 * 60, show_spinner=False)
+@st.cache_data(ttl=10 * 60, show_spinner=False)
 def load_data():
     result = {}
     product_query = """

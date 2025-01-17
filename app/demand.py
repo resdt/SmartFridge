@@ -6,7 +6,7 @@ import plotly.graph_objs as go
 import utils.connections as conn
 
 
-@st.cache_data(ttl=10 * 60 * 60, show_spinner=False)
+@st.cache_data(ttl=10 * 60, show_spinner=False)
 def load_data():
     result = {}
     fridge_log_query = """
