@@ -14,7 +14,7 @@ def display():
         if submit_button:
             try:
                 cur_user_query = """
-                SELECT user_type
+                SELECT TRUE
                 FROM users
                 WHERE username = $1 AND hashed_password = $2;
                 """
@@ -25,7 +25,6 @@ def display():
                     st.error("Неправильный логин или пароль")
                     st.stop()
 
-                st.session_state.user_type = user_data[0]["user_type"]
                 st.session_state.is_logged_in = True
                 st.rerun()
             except Exception:
